@@ -77,14 +77,16 @@ dist = setup(
     package_dir = {'':'src'},
     packages = find_packages(os.path.join(here, 'src')),
     # put data files in egg 'doc' dir
-    data_files=[ ('doc', [
-        'README.txt',
-        'CHANGES.txt',
-        'TODO.txt',
-        'LICENSES.txt',
-        'COPYRIGHT.txt'
-        ]
-    )],
+    data_files=[ 
+    	('doc', [
+	        'README.txt',
+	        'CHANGES.txt',
+	        'TODO.txt',
+	        'LICENSES.txt',
+	        'COPYRIGHT.txt'
+	        ]),
+	    ('supervisor', ['version.txt'])
+    ],
     install_requires = requires,
     extras_require = {'iterparse':['cElementTree >= 1.0.2']},
     tests_require = requires + ['mock >= 0.5.0'],
