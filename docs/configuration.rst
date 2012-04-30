@@ -269,12 +269,14 @@ follows.
 ``minfds``
 
   The minimum number of file descriptors that must be available before
-  supervisord will start successfully.  supervisord uses file
-  descriptors liberally, and will enter a failure mode when one cannot
-  be obtained fromt he OS, so it's useful to be able to specify a
-  minimum value to ensure it doesn't run out of them during execution.
-  This option is particularly useful on Solaris, which has a low
-  per-process fd limit by default.
+  supervisord will start successfully.  A call to setrlimit will be made
+  to attempt to raise the soft and hard limits of the supervisord process to
+  satisfy ``minfds``.  The hard limit may only be raised if supervisord
+  is run as root.  supervisord uses file descriptors liberally, and will
+  enter a failure mode when one cannot be obtained from the OS, so it's
+  useful to be able to specify a minimum value to ensure it doesn't run out
+  of them during execution. This option is particularly useful on Solaris,
+  which has a low per-process fd limit by default.
 
   *Default*:  1024
 
@@ -284,11 +286,13 @@ follows.
 
 ``minprocs``
 
-  The minimum nymber of process descriptors that must be available
-  before supervisord will start successfully.  Supervisor will enter a
-  failure mode when the OS runs out of process descriptors, so it's
-  useful to ensure that enough process descriptors are available upon
-  :program:`supervisord` startup.
+  The minimum number of process descriptors that must be available
+  before supervisord will start successfully.  A call to setrlimit will be
+  made to attempt to raise the soft and hard limits of the supervisord process
+  to satisfy ``minprocs``.  The hard limit may only be raised if supervisord
+  is run as root.  supervisord will enter a failure mode when the OS runs out
+  of process descriptors, so it's useful to ensure that enough process
+  descriptors are available upon :program:`supervisord` startup.
 
   *Default*:  200
 
@@ -549,7 +553,8 @@ where specified.
   expand to ``/path/to/programname --port=8000`` at runtime.  String
   expressions are evaluated against a dictionary containing the keys
   ``group_name``, ``host_node_name``, ``process_num``, ``program_name``, 
-  and ``here`` (the directory of the supervisord config file).  Controlled 
+  ``here`` (the directory of the supervisord config file), and all
+  supervisord's environment variables prefixed with ``ENV_``.  Controlled 
   programs should themselves not be daemons, as supervisord assumes it is
   responsible for daemonizing its subprocesses (see
   :ref:`nondaemonizing_of_subprocesses`).
@@ -660,8 +665,8 @@ where specified.
 
   The number of serial failure attempts that :program:`supervisord`
   will allow when attempting to start the program before giving up and
-  puting the process into an ``ERROR`` state.  See
-  :ref:`process_states` for explanation of the ``ERROR`` state.
+  puting the process into an ``FATAL`` state.  See
+  :ref:`process_states` for explanation of the ``FATAL`` state.
 
   *Default*: 3
 
@@ -708,6 +713,32 @@ where specified.
 
   *Introduced*: 3.0
 
+``stopasgroup``
+
+  If true, the flag causes supervisor to send the stop signal to the
+  whole process group and implies ``killasgroup``=true.  This is useful 
+  for programs, such as Flask in debug mode, that do not propagate
+  stop signals to their children, leaving them orphaned.
+
+  *Default*: false
+
+  *Required*:  No.
+
+  *Introduced*: 3.0a13
+
+``killasgroup``
+
+  If true, when resorting to send SIGKILL to the program to terminate
+  it send it to its whole process group instead, taking care of its
+  children as well, useful e.g with Python programs using
+  :mod:`multiprocessing`.
+
+  *Default*: false
+
+  *Required*:  No.
+
+  *Introduced*: 3.0a11
+
 ``user``
 
   If :program:`supervisord` runs as root, this UNIX user account will
@@ -724,7 +755,7 @@ where specified.
 ``redirect_stderr``
 
   If true, cause the process' stderr output to be sent back to
-  :program:`supervisord` on it's stdout file descriptor (in UNIX shell
+  :program:`supervisord` on its stdout file descriptor (in UNIX shell
   terms, this is the equivalent of executing ``/the/program 2>&1``).
 
   *Default*: false
@@ -1082,10 +1113,10 @@ to take advantage of newer event-driven web servers such as lighttpd
 or nginx which don't include a built-in process manager, you had to
 use scripts like cgi-fcgi or spawn-fcgi.  These can be used in
 conjunction with a process manager such as supervisord or daemontools
-but require each FastCGI child process to bind to it's own socket.
+but require each FastCGI child process to bind to its own socket.
 The disadvantages of this are: unnecessarily complicated web server
 configuration, ungraceful restarts, and reduced fault tolerance.  With
-less sockets to configure, web server configurations are much smaller
+fewer sockets to configure, web server configurations are much smaller
 if groups of FastCGI processes can share sockets.  Shared sockets
 allow for graceful restarts because the socket remains bound by the
 parent process while any of the child processes are being restarted.

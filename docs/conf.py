@@ -21,7 +21,7 @@ from datetime import date
 #sys.path.append(os.path.abspath('some/directory'))
 
 parent = os.path.dirname(os.path.dirname(__file__))
-sys.path.append(os.path.join(os.path.abspath(parent), 'src'))
+sys.path.append(os.path.abspath(parent))
 wd = os.getcwd()
 os.chdir(parent)
 os.system('%s setup.py test -q' % sys.executable)
@@ -30,6 +30,9 @@ os.chdir(wd)
 for item in os.listdir(parent):
     if item.endswith('.egg'):
         sys.path.append(os.path.join(parent, item))
+
+version_txt = os.path.join(parent, 'supervisor/version.txt')
+supervisor_version = open(version_txt).read().strip()
 
 # General configuration
 # ---------------------
@@ -56,7 +59,7 @@ copyright = '2004-%d, Agendaless Consulting and Contributors' % year
 # other places throughout the built documents.
 #
 # The short X.Y version.
-version = '3.0a9'
+version = supervisor_version
 # The full version, including alpha/beta/rc tags.
 release = version
 

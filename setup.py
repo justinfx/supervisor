@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2006-2011 Agendaless Consulting and Contributors.
+# Copyright (c) 2006-2012 Agendaless Consulting and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the BSD-like license at
@@ -12,24 +12,17 @@
 #
 ##############################################################################
 
-import urllib
-import urllib2
-if not hasattr(urllib2, 'splituser'):
-    # setuptools wants to import this from urllib2 but it's not
-    # in there in Python 2.3.3, so we just alias it.
-    urllib2.splituser = urllib.splituser
-
 import os
 import sys
 
-if sys.version_info[:2] < (2, 3):
-    msg = ("supervisor requires Python 2.3 or better, you are attempting to "
-           "install it using version %s.  Please install with a "
-           "supported version" % sys.version)
+if sys.version_info[:2] < (2, 4) or sys.version_info[0] > 2:
+    msg = ("Supervisor requires Python 2.4 or later but does not work on "
+           "any version of Python 3.  You are using version %s.  Please "
+           "install using a supported version." % sys.version)
     sys.stderr.write(msg)
     sys.exit(1)
 
-requires = ['meld3 >= 0.6.5']
+requires = ['setuptools', 'meld3 >= 0.6.5']
 
 if sys.version_info[:2] < (2, 5):
     # for meld3 (it's a distutils package)
@@ -40,7 +33,7 @@ here = os.path.abspath(os.path.normpath(os.path.dirname(__file__)))
 
 try:
     here = os.path.abspath(os.path.dirname(__file__))
-    README = open(os.path.join(here, 'README.txt')).read()
+    README = open(os.path.join(here, 'README.rst')).read()
     CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 except:
     README = """\
@@ -59,7 +52,7 @@ CLASSIFIERS = [
     'Topic :: System :: Systems Administration',
     ]
 
-version_txt = os.path.join(here, 'src/supervisor/version.txt')
+version_txt = os.path.join(here, 'supervisor/version.txt')
 supervisor_version = open(version_txt).read().strip()
 
 dist = setup(
@@ -98,7 +91,6 @@ dist = setup(
     namespace_packages = ['supervisor'],
     test_suite = "supervisor.tests",
     entry_points = {
-     'supervisor_rpc':['main = supervisor.rpcinterface:make_main_rpcinterface'],
      'console_scripts': [
          'supervisord = supervisor.supervisord:main',
          'supervisorctl = supervisor.supervisorctl:main',
