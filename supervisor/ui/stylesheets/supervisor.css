@@ -1,3 +1,9 @@
+/*
+
+8/25/2011: Modified for RealTime bundle
+
+*/
+
 /* =ORDER
  1. display
  2. float and position
@@ -15,7 +21,7 @@
 ----------------------------------------------- */
 body, td, input, select, textarea, a {
   font: 12px/1.5em arial, helvetica, verdana, sans-serif;
-  color: #333;
+  color: #FFF;
 }
 html, body, form, fieldset, h1, h2, h3, h4, h5, h6, 
 p, pre, blockquote, ul, ol, dl, address {
@@ -35,15 +41,15 @@ img, table {
 /* =COLORS
 ----------------------------------------------- */
 body {
-  background-color: #FFFFF3;
-  color: #333;
+  background-color: #333;
+  color: #FFF;
 }
 a:link, 
 a:visited {
-  color: #333;
+  color: #FFF;
 }
 a:hover {
-  color: #000;
+  color: #B8CF6A;
 }
 
 /* =FLOATS
@@ -94,7 +100,7 @@ html, body {
 ----------------------------------------------- */
 #header {
   margin-bottom: 13px;
-  padding: 10px 0 13px 0;
+  padding: 16px 0 65px 0;
   background: url("../images/rule.gif") left bottom repeat-x;
 }
 .status_msg {
@@ -111,6 +117,7 @@ html, body {
   float: left;
   display: block;
   margin: 0 7px 0 0;
+  background-color: #333;
 }
 #buttons a {
   float: left;
@@ -145,7 +152,7 @@ html, body {
 
 table {
   width: 100%;
-  border: 1px solid #919191;
+  border: 1px solid #FFF;
 }
 th {
   background-color: #919191;
@@ -169,7 +176,7 @@ td, th {
   border-bottom: 1px solid #fff;
 }
 tr td {
-  background-color: #FBFBFB;
+  background-color: #5b666c;
 }
 tr.shade td {
   background-color: #F0F0F0;
